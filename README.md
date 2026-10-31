@@ -72,12 +72,25 @@ com.unity.recorder/Editor/Sources/Labeling/RecorderSessionBridge.cs
 }
 ```
 
-Or install this package straight from git — but only after steps 1 and 2, since it still needs the bridged
-clone of the Recorder:
+Or add it through **Package Manager > + > Add package from git URL**, but only after steps 1 and 2, since it
+still needs the bridged clone of the Recorder:
 
 ```
 https://github.com/ZermatAbdenour/labeled-recorder.git
 ```
+
+Use the **HTTPS** URL, not `git@github.com:…`. Unity runs git non-interactively, so an SSH URL fails with
+`Host key verification failed` unless you already have an SSH key and `github.com` in `~/.ssh/known_hosts`.
+
+Two caveats with a git-URL install:
+
+- **Your Recorder clone must already be in the manifest.** This package declares `com.unity.recorder` 5.1.7 as
+  a dependency. If no `file:` entry satisfies it, Unity fetches the Recorder from the registry into its
+  read-only cache, where the bridge cannot be added — and compilation fails with
+  `The type or namespace name 'Labeling' does not exist in the namespace 'UnityEditor.Recorder'`. Add the
+  Recorder's `file:` path first.
+- **It is read-only and pinned to a commit.** Git-URL packages land in `Library/PackageCache`. If you intend
+  to edit this package, use the `file:` path above instead.
 
 **4. Check the switch.** Label capture is on by default:
 **Project Settings > Labeled Recorder > Enable Label Capture**. The same toggle is on the
@@ -181,6 +194,9 @@ LabeledRecorder.Editor.LabelCapture.LabelFileWritten += path => { /* … */ };
 **`The type or namespace name 'Labeling' does not exist in the namespace 'UnityEditor.Recorder'`**
 The bridge file has not been copied into your Recorder clone. See step 2 of Install. This is also what you
 will see if the Recorder is installed from the registry instead of a local clone.
+
+**`Host key verification failed` when adding the package from a git URL.** You used the SSH URL
+(`git@github.com:…`). Use the HTTPS one: `https://github.com/ZermatAbdenour/labeled-recorder.git`.
 
 **The label file is not written.** Check that **Enable Label Capture** is on, and turn on **Verbose Logging**
 in Project Settings — it logs every recording start, stop and file write to the Console.
