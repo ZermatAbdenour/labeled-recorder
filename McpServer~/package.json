@@ -1,0 +1,29 @@
+{
+  "name": "labeled-recorder-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MCP server that gives an editing agent the timecode context recorded alongside Unity Recorder captures by the Labeled Recorder package.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "labeled-recorder-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch",
+    "start": "node dist/index.js",
+    "selftest": "node dist/selftest.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,0 +1,11 @@
+# Node, for the bundled MCP server
+node_modules/
+dist/
+*.tsbuildinfo
+npm-debug.log*
+
+# Editors and OS
+.vs/
+.idea/
+.DS_Store
+Thumbs.db

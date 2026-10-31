@@ -1,0 +1,21 @@
+{
+    "name": "LabeledRecorder.Editor",
+    "rootNamespace": "LabeledRecorder.Editor",
+    "references": [
+        "LabeledRecorder.Runtime",
+        "Unity.Recorder.Editor",
+        "Unity.Recorder",
+        "Unity.Recorder.Base"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
