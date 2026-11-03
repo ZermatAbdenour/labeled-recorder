@@ -22,77 +22,51 @@ decision.
 
 ## This is not the Unity Recorder, and it is not a fork of it
 
-Labeled Recorder is a **separate package that works alongside a local clone of Unity's Recorder package**
+Labeled Recorder is a **separate package that works alongside Unity's Recorder package**
 ([`com.unity.recorder`](https://docs.unity3d.com/Packages/com.unity.recorder@5.1/manual/index.html)). The
 Recorder is Unity Technologies' package, published under the Unity Companion License — none of its code is in
 this repository, and nothing here replaces it. Recording itself is still done entirely by the Recorder, from
 the Recorder window or a Timeline Recorder clip, exactly as before.
 
-Developed against Recorder 5.1.7, cloned from the read-only
-[`needle-mirror/com.unity.recorder`](https://github.com/needle-mirror/com.unity.recorder) mirror.
+Developed against Recorder 5.1.7.
 
 What this package needs from the Recorder is visibility into a live recording session: which file it will
 write, at what frame rate and resolution, and how many frames it has committed so far. The Recorder keeps all
-of that `internal`. So Labeled Recorder ships **one additive file**,
-[`RecorderBridge~/RecorderSessionBridge.cs`](RecorderBridge~/README.md), which you copy into your clone of the
-Recorder. Compiled inside the Recorder's own assembly, it re-exposes that state as plain public data.
+of that `internal`. So Labeled Recorder ships one small bridge,
+[`Editor/RecorderBridge/RecorderSessionBridge.cs`](Editor/RecorderBridge/RecorderSessionBridge.cs), with an
+assembly definition reference that compiles it into the Recorder's own assembly, where it re-exposes that state
+as plain public data.
 
-The bridge **changes no existing Recorder file**. In a fresh clone, `git status` after copying it in shows one
-untracked directory and zero modified files, so you can keep pulling upstream Recorder updates without a merge
-conflict.
-
-That clone is why the Recorder has to be local rather than installed from the registry: a registry copy is
-read-only, so the bridge cannot be added to it.
+The bridge **changes no Recorder file** and nothing has to be copied or cloned, so it works with the ordinary
+registry install of the Recorder.
 
 ---
 
 ## Install
 
-**1. Clone the Recorder** somewhere outside your Unity project's `Assets` folder. Unity does not publish the
-Recorder's source on GitHub itself, so this uses the read-only community mirror:
-
-```bash
-git clone https://github.com/needle-mirror/com.unity.recorder.git
-```
-
-**2. Copy the bridge into it**, creating the folder if needed:
-
-```
-com.unity.recorder/Editor/Sources/Labeling/RecorderSessionBridge.cs
-```
-
-**3. Add both packages** to your project's `Packages/manifest.json`, pointing at your local paths:
-
-```json
-{
-  "dependencies": {
-    "com.unity.recorder": "file:../../LabeledRecorder/com.unity.recorder",
-    "com.labeledrecorder": "file:../../LabeledRecorder/com.labeledrecorder"
-  }
-}
-```
-
-Or add it through **Package Manager > + > Add package from git URL**, but only after steps 1 and 2, since it
-still needs the bridged clone of the Recorder:
+**1. Add the package** through **Package Manager > + > Add package from git URL**:
 
 ```
 https://github.com/ZermatAbdenour/labeled-recorder.git
 ```
 
+Unity installs the Recorder (5.1.7) for you as a dependency.
+
 Use the **HTTPS** URL, not `git@github.com:…`. Unity runs git non-interactively, so an SSH URL fails with
 `Host key verification failed` unless you already have an SSH key and `github.com` in `~/.ssh/known_hosts`.
 
-Two caveats with a git-URL install:
+A git-URL package is read-only and pinned to a commit in `Library/PackageCache`. If you intend to edit this
+package, clone it and add it to `Packages/manifest.json` with a `file:` path instead:
 
-- **Your Recorder clone must already be in the manifest.** This package declares `com.unity.recorder` 5.1.7 as
-  a dependency. If no `file:` entry satisfies it, Unity fetches the Recorder from the registry into its
-  read-only cache, where the bridge cannot be added — and compilation fails with
-  `The type or namespace name 'Labeling' does not exist in the namespace 'UnityEditor.Recorder'`. Add the
-  Recorder's `file:` path first.
-- **It is read-only and pinned to a commit.** Git-URL packages land in `Library/PackageCache`. If you intend
-  to edit this package, use the `file:` path above instead.
+```json
+{
+  "dependencies": {
+    "com.labeledrecorder": "file:../../LabeledRecorder/com.labeledrecorder"
+  }
+}
+```
 
-**4. Check the switch.** Label capture is on by default:
+**2. Check the switch.** Label capture is on by default:
 **Project Settings > Labeled Recorder > Enable Label Capture**. The same toggle is on the
 **Tools > Labeled Recorder** menu.
 
@@ -192,8 +166,9 @@ LabeledRecorder.Editor.LabelCapture.LabelFileWritten += path => { /* … */ };
 ## Troubleshooting
 
 **`The type or namespace name 'Labeling' does not exist in the namespace 'UnityEditor.Recorder'`**
-The bridge file has not been copied into your Recorder clone. See step 2 of Install. This is also what you
-will see if the Recorder is installed from the registry instead of a local clone.
+You are on version 1.0.0, which needed the bridge copied into a clone of the Recorder. Update to 1.0.1 or newer;
+for a git-URL install, remove the `com.labeledrecorder` entry from `Packages/packages-lock.json` so Unity fetches
+the latest commit.
 
 **`Host key verification failed` when adding the package from a git URL.** You used the SSH URL
 (`git@github.com:…`). Use the HTTPS one: `https://github.com/ZermatAbdenour/labeled-recorder.git`.

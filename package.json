@@ -1,7 +1,7 @@
 {
   "name": "com.labeledrecorder",
   "displayName": "Labeled Recorder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "unity": "6000.0",
   "description": "Writes a machine-readable label track (events, spans, game-data changes, markers) alongside every Unity Recorder capture. Labels are emitted from game code with one-line calls that compile away completely in player builds. Intended to give AI agents the timecode context they need to cut shorts and trailers automatically.",
   "keywords": [

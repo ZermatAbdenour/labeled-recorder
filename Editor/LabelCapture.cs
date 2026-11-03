@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Recorder.Labeling;
+using UnityEditor.Recorder.SessionBridge;
 using UnityEngine;
 using UnityEngine.LowLevel;
 

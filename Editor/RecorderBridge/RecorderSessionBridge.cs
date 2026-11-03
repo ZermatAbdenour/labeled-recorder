@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UnityEditor.Recorder.Labeling
+namespace UnityEditor.Recorder.SessionBridge
 {
     /// <summary>
     /// A read-only view of one live Recorder session, flattened into public data.
