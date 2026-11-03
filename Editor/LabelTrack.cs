@@ -144,6 +144,12 @@ namespace LabeledRecorder.Editor
         /// <summary>True when at least one label was discarded for being over the cap.</summary>
         public bool Truncated => TruncatedCount > 0;
 
+        /// <summary>True once this track holds as many labels as its cap allows.</summary>
+        public bool AtCap => AcceptedCount >= m_Cap;
+
+        /// <summary>True when the recording was stopped early because this track reached its cap.</summary>
+        public bool StoppedAtCap { get; set; }
+
         readonly Dictionary<string, List<SpanEntry>> m_OpenSpans = new Dictionary<string, List<SpanEntry>>();
         int m_Cap = int.MaxValue;
 

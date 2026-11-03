@@ -20,7 +20,7 @@ namespace LabeledRecorder.Editor
             "label file reports dropped labels.");
 
         static readonly GUIContent k_MaxLabels = new GUIContent("Max Labels Per Recording",
-            "A ceiling on how many labels one recording keeps in memory.");
+            "A ceiling on how many labels one recording keeps in memory. Reaching it stops the recording with a warning.");
 
         static readonly GUIContent k_Location = new GUIContent("Output Location",
             "Next To Media keeps the label file paired with its video, which is what the MCP server expects.");

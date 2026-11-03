@@ -3,6 +3,7 @@
     "rootNamespace": "LabeledRecorder.Editor",
     "references": [
         "LabeledRecorder.Runtime",
+        "Unity.Recorder.Editor.Tests",
         "Unity.Recorder.Editor",
         "Unity.Recorder",
         "Unity.Recorder.Base"

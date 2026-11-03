@@ -3,7 +3,25 @@
 All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.0] - 2026-11-03
+
+### Changed
+
+- Reaching **Max Labels Per Recording** now stops that recording and logs a warning, instead of carrying on and
+  discarding labels. The video and label file are still written, and the label file reports
+  `stats.stoppedAtLabelLimit`.
+
+### Fixed
+
+- The Recorder window no longer deletes recorders or fails with `no recorders are active and have no errors`. The
+  1.0.1 assembly definition reference corrupted the script table of `Unity.Recorder.Editor`. The bridge now compiles
+  into its own assembly, named `Unity.Recorder.Editor.Tests` to use the access the Recorder already grants that name.
+  Restart the Editor after updating from 1.0.1.
+- The label file now reports the correct package version.
+
 ## [1.0.1] - 2026-11-03
+
+**Do not use this version:** it breaks the Recorder window. See 1.1.0.
 
 ### Fixed
 

@@ -82,13 +82,14 @@ namespace UnityEditor.Recorder.SessionBridge
     /// </summary>
     /// <remarks>
     /// <para>
-    /// The Recorder keeps <c>RecordingSession</c>, <c>RecorderComponent</c> and most of
-    /// <c>RecorderSettings</c> internal to this assembly. This file lives inside the same assembly purely so that
-    /// tooling in other assemblies can observe a recording without reflection.
+    /// The Recorder keeps <c>RecorderComponent</c> and most of <c>RecorderSettings</c> internal to its assembly,
+    /// but grants <c>InternalsVisibleTo("Unity.Recorder.Editor.Tests")</c>. This file compiles into its own assembly
+    /// of that name so tooling can observe a recording without reflection.
     /// </para>
     /// <para>
-    /// It is additive: it changes no existing Recorder file, so the package can be updated from upstream without
-    /// a merge conflict. Nothing here mutates recorder state.
+    /// Do not compile it into <c>Unity.Recorder.Editor</c> with an assembly definition reference: a source file from
+    /// another package corrupts that assembly's script table, and every Recorder class then resolves to the wrong
+    /// <c>MonoScript</c>. Nothing here mutates recorder state.
     /// </para>
     /// </remarks>
     public static class RecorderSessionBridge
@@ -193,6 +194,37 @@ namespace UnityEditor.Recorder.SessionBridge
             }
 
             DetectTransitions(results, frame);
+        }
+
+        /// <summary>
+        /// Stops one recording the same way <c>RecorderController.StopRecording</c> does, so its file is finalized.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="SessionStoppedRecording"/> is raised by the next <see cref="Collect"/>. The Recorder window
+        /// notices the session has ended on its own update and returns to idle.
+        /// </remarks>
+        /// <param name="sessionId">The session's <see cref="RecorderSessionView.SessionId"/>.</param>
+        /// <returns>True when a session was recording and has been stopped.</returns>
+        public static bool StopRecording(string sessionId)
+        {
+            foreach (var pair in s_Known)
+            {
+                if (pair.Value.Id != sessionId)
+                    continue;
+
+                var session = pair.Key;
+                if (!session.isRecording)
+                    return false;
+
+                session.Dispose();
+
+                if (session.recorderComponent != null)
+                    UnityEngine.Object.Destroy(session.recorderComponent);
+
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

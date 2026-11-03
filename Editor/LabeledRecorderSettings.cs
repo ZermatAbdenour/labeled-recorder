@@ -59,8 +59,8 @@ namespace LabeledRecorder.Editor
         }
 
         /// <summary>
-        /// A ceiling on how many labels one recording keeps in memory. Past it labels are counted but discarded,
-        /// and the label file says so.
+        /// A ceiling on how many labels one recording keeps in memory. Reaching it stops that recording with a
+        /// warning, and the label file says so.
         /// </summary>
         public int MaxLabelsPerRecording
         {

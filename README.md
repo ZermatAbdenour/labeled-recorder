@@ -33,9 +33,9 @@ Developed against Recorder 5.1.7.
 What this package needs from the Recorder is visibility into a live recording session: which file it will
 write, at what frame rate and resolution, and how many frames it has committed so far. The Recorder keeps all
 of that `internal`. So Labeled Recorder ships one small bridge,
-[`Editor/RecorderBridge/RecorderSessionBridge.cs`](Editor/RecorderBridge/RecorderSessionBridge.cs), with an
-assembly definition reference that compiles it into the Recorder's own assembly, where it re-exposes that state
-as plain public data.
+[`Editor/RecorderBridge/RecorderSessionBridge.cs`](Editor/RecorderBridge/RecorderSessionBridge.cs), in an assembly
+named `Unity.Recorder.Editor.Tests`. The Recorder already grants that name access to its internals, and the bridge
+re-exposes that state as plain public data.
 
 The bridge **changes no Recorder file** and nothing has to be copied or cloned, so it works with the ordinary
 registry install of the Recorder.
@@ -141,7 +141,7 @@ why a label pushed from a job thread still lands on the right frame.
 | Pretty Print | on | turn off for very long recordings |
 | Scene Changes / Time Scale / Frame Pacing / Camera Motion | on | the automatic channels |
 | Buffer Capacity | 4096 | raise only if a label file reports dropped labels |
-| Max Labels Per Recording | 500000 | in-memory ceiling |
+| Max Labels Per Recording | 500000 | reaching it stops that recording with a warning |
 
 ## Reading the files
 
@@ -179,6 +179,13 @@ in Project Settings — it logs every recording start, stop and file write to th
 **Unity generated a pile of `.meta` files.** Expected: this repository has none yet, because they are created
 the first time the package is imported into a project. If you fork this and intend to share your fork, commit
 them — Unity uses the GUIDs inside them to keep asset references stable.
+
+**The recording stopped by itself with a `Labeled Recorder stopped recording` warning.** It reached **Max Labels
+Per Recording**. The video and label file are still written, and `stats.stoppedAtLabelLimit` is `true`. Raise the
+limit in **Project Settings > Labeled Recorder** to record for longer.
+
+**The Recorder window deletes a recorder and says `no recorders are active and have no errors`.** You are on
+version 1.0.1, which corrupted the Recorder's script table. Update, then restart the Editor.
 
 **`stats.dropped` is above zero.** Labels were lost because the capture buffer filled up. Raise
 **Buffer Capacity**.

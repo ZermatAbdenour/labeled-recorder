@@ -166,11 +166,40 @@ namespace LabeledRecorder.Editor
 
             DrainInto();
 
+            StopRecordingsAtLabelLimit(settings);
+
             if (time - s_LastFlush >= 1d)
             {
                 s_LastFlush = time;
                 for (var i = 0; i < s_Recordings.Count; i++)
                     s_Recordings[i].Flush();
+            }
+        }
+
+        static void StopRecordingsAtLabelLimit(LabeledRecorderSettings settings)
+        {
+            for (var i = 0; i < s_Recordings.Count; i++)
+            {
+                var recording = s_Recordings[i];
+                if (!recording.Track.AtCap || recording.Track.StoppedAtCap)
+                    continue;
+
+                recording.Track.StoppedAtCap = true;
+
+                var limit = $"the limit of {settings.MaxLabelsPerRecording} labels";
+                var fix = "Raise Max Labels Per Recording in Project Settings > Labeled Recorder to record for longer.";
+
+                if (RecorderSessionBridge.StopRecording(recording.Context.SessionId))
+                {
+                    Debug.LogWarning($"Labeled Recorder stopped recording '{recording.Context.RecorderName}' " +
+                        $"because it reached {limit}. {fix}");
+                }
+                else
+                {
+                    Debug.LogWarning($"Labeled Recorder could not stop recording " +
+                        $"'{recording.Context.RecorderName}' after it reached {limit}, so further labels are " +
+                        $"being discarded. {fix}");
+                }
             }
         }
 

@@ -120,7 +120,8 @@ seed, character, test condition.
 ### `stats`
 
 `dropped` above zero means the capture buffer filled up and labels were lost; raise **Buffer Capacity** in
-**Project Settings > Labeled Recorder**. `truncatedLabels` above zero means the per-recording ceiling was hit.
+**Project Settings > Labeled Recorder**. `stoppedAtLabelLimit` is `true` when reaching
+**Max Labels Per Recording** stopped the recording early, and `truncatedLabels` counts labels discarded after that.
 Either way the file is incomplete, so the absence of a label proves nothing.
 
 ### `chapters`

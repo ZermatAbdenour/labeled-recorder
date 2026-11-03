@@ -19,7 +19,7 @@ namespace LabeledRecorder.Editor
         public const string Schema = "labeled-recorder/1";
 
         /// <summary>The version of the package that produced the file.</summary>
-        public const string PackageVersion = "1.0.0";
+        public const string PackageVersion = "1.1.0";
 
         /// <summary>
         /// Serializes a finished recording.
@@ -183,6 +183,7 @@ namespace LabeledRecorder.Editor
             writer.Int("mediaFrames", frameCount);
             writer.Int("dropped", LabelSink.DroppedCount);
             writer.Int("truncatedLabels", track.TruncatedCount);
+            writer.Bool("stoppedAtLabelLimit", track.StoppedAtCap);
 
             if (LabelSink.DroppedCount > 0)
             {
